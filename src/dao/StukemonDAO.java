@@ -26,6 +26,22 @@ public class StukemonDAO {
 
     private Connection conexion;
 
+    // Hace falta pasarle el usuario entero;
+    public void capturarPokemon(Usuario usu, Pokemon pokemon) throws SQLException, Excepcion {
+        if (!existeUsuario(usu)) {
+            throw new Excepcion("ERROR: No existe ningún usuario con ese nombre");
+        }
+        if (!existePokemon(pokemon)) {
+            throw new Excepcion("ERROR: No existe ningún pokemon con ese nombre");
+        }
+        if (!calcularPokeballs(usu)) {
+            throw new Excepcion("ERROR: El usuario no tiene pokeballs");
+        }
+        List Pokemon = getPokemonByUserPlace(usu);
+        
+        
+    }
+
     // ********************* Selects ****************************
     public Usuario getUsuarioByNombre(String nombre) throws SQLException, Excepcion {
         // Creamos usuario para comprobar si existe
@@ -53,13 +69,12 @@ public class StukemonDAO {
         return user;
     }
 
-    public Pokemon getPokemonByNombre(String nombre) throws SQLException, Excepcion {
+    public Pokemon getPokemonByNombre(Pokemon pokemon) throws SQLException, Excepcion {
         // Creamos usuario para comprobar si existe
-        Pokemon pk = new Pokemon(nombre);
-        if (!existePokemon(pk)) {
+        if (!existePokemon(pokemon)) {
             throw new Excepcion("ERROR: No existe ningún pokemon con ese nombre");
         }
-        String select = "select * from pokemon where name='" + nombre + "'";
+        String select = "select * from pokemon where name='" + pokemon.getNombre() + "'";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(select);
         Pokemon poke = new Pokemon();
@@ -103,10 +118,9 @@ public class StukemonDAO {
         return contraseña;
     }
 
-    public List<Pokemon> getPokemonByUserPlace(String nombre) throws SQLException, Excepcion {
+    public List<Pokemon> getPokemonByUserPlace(Usuario usu) throws SQLException, Excepcion {
         // Creamos usuario para comprobar si existe
         List<Pokemon> pokemon = new ArrayList<>();
-        Usuario usu = new Usuario(nombre);
         if (!existeUsuario(usu)) {
             throw new Excepcion("ERROR: No existe ningún usuario con ese nombre");
         }
@@ -227,6 +241,22 @@ public class StukemonDAO {
     }
 
     // ********************* Funciones adicionales ****************************
+    private boolean calcularPokeballs(Usuario usu) throws SQLException {
+        String select = "select pokeballs from user where username= '" + usu.getNombreuser() + "'";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(select);
+        boolean tienePokeballs = false;
+
+        if (rs.next()) {
+            if (1 <= rs.getInt("pokeballs")) {
+                tienePokeballs = true;
+            }
+        }
+        rs.close();
+        st.close();
+        return tienePokeballs;
+    }
+
     private boolean existeUsuario(Usuario usu) throws SQLException {
         String select = "select * from user where username='" + usu.getNombreuser() + "'";
         Statement st = conexion.createStatement();

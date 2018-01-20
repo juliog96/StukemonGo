@@ -5,11 +5,13 @@
  */
 package modelo;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author julio
  */
-public class Usuario {
+public class Usuario implements Capturar {
 
     private String nombreuser;
     private String password;
@@ -19,6 +21,7 @@ public class Usuario {
     private String lugar;
     private int monedas;
     private int puntos;
+    private ArrayList<Pokedex> pokedex;
 
     public Usuario() {
     }
@@ -36,6 +39,7 @@ public class Usuario {
         this.lugar = lugar;
         this.monedas = 0;
         this.puntos = 0;
+        this.pokedex = new ArrayList<>();
     }
 
     public String getNombreuser() {
@@ -102,9 +106,25 @@ public class Usuario {
         this.puntos = puntos;
     }
 
+    public Usuario(ArrayList<Pokedex> pokedex) {
+        this.pokedex = pokedex;
+    }
+    
     @Override
     public String toString() {
         return "Usuario{" + "nombreuser=" + nombreuser + ", password=" + password + ", pokeballs=" + pokeballs + ", pociones=" + pociones + ", nivel=" + nivel + ", lugar=" + lugar + ", monedas=" + monedas + ", puntos=" + puntos + '}';
+    }
+
+    @Override
+    public boolean capturar() {
+        int numrand = (int) (Math.random() * (50 - 20) + 20);
+        int numrand2 = (int) (Math.random() * (30 - 10) + 10);
+        int sumaTotal = numrand2 + this.getNivel();
+        boolean capturar = false;
+        if (sumaTotal > numrand) {
+            capturar = true;
+        }
+        return capturar;
     }
 
 }

@@ -27,10 +27,9 @@ public class Stukemon_Go {
         StukemonDAO stukemonDAO = new StukemonDAO();
 
         //Se regalan 20 pokeballs que se definen en la clase usuario 
-        Usuario user1 = new Usuario("Pepe", "Rot34", "Mosso");
-
+        Usuario user1 = new Usuario("Lucas", "Ro34", "Mosso");
         Pokemon pk1 = new Pokemon("Pikachu", "Electrico", 0, 0, "C/Pelai");
-        Pokemon pk2 = new Pokemon("Charizar", "Fuego", 0, 0, "Sagrada Familia");
+        Pokemon pk2 = new Pokemon("Charizar", "Fuego", 0, 0, "Mosso");
         Pokeparada pokepa1 = new Pokeparada("Losa2", "Sagrada Familia", 2, 4);
 
         // Conectamos a la base de datos
@@ -110,11 +109,18 @@ public class Stukemon_Go {
         try {
             System.out.println("************************************************************");
             System.out.println("-- Testeando obtener listado pokemon que estan en el mismo lugar que el usuario: Julio --");
-            obtenerListaPokemonByUserPlace(stukemonDAO, "Julio");
+            obtenerListaPokemonByUserPlace(stukemonDAO, user1);
         } catch (SQLException ex) {
             System.out.println("Error al obtener listado pokemon: " + ex.getMessage());
         }
         //Capturar pokemon recibinedo usuario y pokemon
+        try {
+            System.out.println("************************************************************");
+            System.out.println("-- Testeando capturar pokemon --");
+            capturarPokemon(stukemonDAO, user1, pk2);
+        } catch (SQLException ex) {
+            System.out.println("Error al obtener listado pokemon: " + ex.getMessage());
+        }
         //Liberar pokemon recibinedo usuario y pokemon
         //Listado usuarios que estan en el mismo lugar que un usuario dado
         //Listado pokeparadas que estan en el mismo lugar que un usuario dado
@@ -190,7 +196,7 @@ public class Stukemon_Go {
             stukemonDAO.modificarLugarPokemon(pk);
             System.out.println("Lugar modificado.");
             System.out.println("Obteniendo datos de la BBDD del pokemon " + pk.getNombre() + " para comprobar el nuevo lugar");
-            Pokemon aux = stukemonDAO.getPokemonByNombre(pk.getNombre());
+            Pokemon aux = stukemonDAO.getPokemonByNombre(pk);
             System.out.println("Nuevos datos:");
             System.out.println(aux);
         } catch (Excepcion ex) {
@@ -198,14 +204,23 @@ public class Stukemon_Go {
         }
     }
 
-    public static void obtenerListaPokemonByUserPlace(StukemonDAO stukemonDAO, String nombreuser) throws SQLException {
+    public static void obtenerListaPokemonByUserPlace(StukemonDAO stukemonDAO, Usuario user) throws SQLException {
         try {
             System.out.println("Datos del usuario:");
-            List<Pokemon> pk = stukemonDAO.getPokemonByUserPlace(nombreuser);
+            List<Pokemon> pk = stukemonDAO.getPokemonByUserPlace(user);
             System.out.println("Datos de los pokemon:");
             for (Pokemon poke : pk) {
                 System.out.println(poke);
             }
+        } catch (Excepcion ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private static void capturarPokemon(StukemonDAO stukemonDAO, Usuario user, Pokemon pokemon) throws SQLException {
+        try {
+            stukemonDAO.capturarPokemon(user, pokemon);
+            System.out.println("El pokemon, "+pokemon.getNombre()+" ha sido capturado por el usuario "+user.getNombreuser());
         } catch (Excepcion ex) {
             System.out.println(ex.getMessage());
         }

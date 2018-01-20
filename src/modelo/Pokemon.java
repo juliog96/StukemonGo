@@ -23,7 +23,7 @@ public class Pokemon {
     public Pokemon(String nombre) {
         this.nombre = nombre;
     }
-    
+
     public Pokemon(String nombre, String tipo, int pc, int vida, String lugar) {
         this.nombre = nombre;
         this.tipo = tipo;
