@@ -42,6 +42,14 @@ public class Usuario implements Capturar {
         this.pokedex = new ArrayList<>();
     }
 
+    public ArrayList<Pokedex> getPokedex() {
+        return pokedex;
+    }
+
+    public void setPokedex(ArrayList<Pokedex> pokedex) {
+        this.pokedex = pokedex;
+    }
+
     public String getNombreuser() {
         return nombreuser;
     }
@@ -109,10 +117,10 @@ public class Usuario implements Capturar {
     public Usuario(ArrayList<Pokedex> pokedex) {
         this.pokedex = pokedex;
     }
-    
+
     @Override
     public String toString() {
-        return "Usuario{" + "nombreuser=" + nombreuser + ", password=" + password + ", pokeballs=" + pokeballs + ", pociones=" + pociones + ", nivel=" + nivel + ", lugar=" + lugar + ", monedas=" + monedas + ", puntos=" + puntos + '}';
+        return "Usuario{" + "nombreuser=" + nombreuser + ", password=" + password + ", pokeballs=" + pokeballs + ", pociones=" + pociones + ", nivel=" + nivel + ", lugar=" + lugar + ", monedas=" + monedas + ", puntos=" + puntos + ", pokedex=" + pokedex + '}';
     }
 
     @Override

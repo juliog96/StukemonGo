@@ -20,8 +20,10 @@ public class Pokedex {
     public int maximaVida;
     public int vidaActual;
 
-    public Pokedex(int id, Pokemon pokemon, LocalDate fecha, int pc, int maximaVida, int vidaActual) {
-        this.id = id;
+    public Pokedex() {
+    }
+
+    public Pokedex(Pokemon pokemon, LocalDate fecha, int pc, int maximaVida, int vidaActual) {
         this.pokemon = pokemon;
         this.fecha = fecha;
         this.pc = pc;
@@ -75,6 +77,11 @@ public class Pokedex {
 
     public void setVidaActual(int vidaActual) {
         this.vidaActual = vidaActual;
+    }
+
+    @Override
+    public String toString() {
+        return "Pokedex{" + "id=" + id + ", pokemon=" + pokemon + ", fecha=" + fecha + ", pc=" + pc + ", maximaVida=" + maximaVida + ", vidaActual=" + vidaActual + '}';
     }
 
 }

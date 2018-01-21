@@ -10,11 +10,14 @@ package modelo;
  * @author julio
  */
 public class Pokeparada {
-    
+
     private String nombre;
     private String lugar;
     private Integer pokeballs;
     private Integer pociones;
+
+    public Pokeparada() {
+    }
 
     public Pokeparada(String nombre, String lugar, Integer pokeballs, Integer pociones) {
         this.nombre = nombre;
@@ -58,5 +61,5 @@ public class Pokeparada {
     @Override
     public String toString() {
         return "Pokeparada{" + "nombre=" + nombre + ", lugar=" + lugar + ", pokeballs=" + pokeballs + ", pociones=" + pociones + '}';
-    }   
+    }
 }
