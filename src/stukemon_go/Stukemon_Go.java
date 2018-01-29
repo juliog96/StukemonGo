@@ -33,6 +33,8 @@ public class Stukemon_Go {
         //Se regalan 20 pokeballs que se definen en la clase usuario 
         Usuario user1 = new Usuario("Lucas", "Ro34", "Mosso");
         Usuario user2 = new Usuario("Julio", "Lol21", "Sagrada Familia");
+        Usuario user3 = new Usuario("Luis", "1234", "Anec Blau");
+        Usuario user4 = new Usuario("Antonia", "12345", "Anec Blau");
 
         Pokemon pk1 = new Pokemon("Pikachu", "Electrico", 15, 30, "C/Pelai");
         Pokemon pk2 = new Pokemon("Charizar", "Fuego", 20, 50, "Splau");
@@ -58,6 +60,16 @@ public class Stukemon_Go {
             System.out.println("************************************************************");
             System.out.println("-- Testeando insert user " + user2.getNombreuser() + " --");
             altaUser(stukemonDAO, user2);
+
+            //Registramos usuario
+            System.out.println("************************************************************");
+            System.out.println("-- Testeando insert user " + user2.getNombreuser() + " --");
+            altaUser(stukemonDAO, user3);
+
+            //Registramos usuario
+            System.out.println("************************************************************");
+            System.out.println("-- Testeando insert user " + user2.getNombreuser() + " --");
+            altaUser(stukemonDAO, user4);
 
             //Buscamos usuario por nombreuser
             System.out.println("************************************************************");
@@ -123,6 +135,9 @@ public class Stukemon_Go {
 
             //Liberar pokemon recibinedo usuario y pokemon
             System.out.println("************************************************************");
+            //Le creo el id random porque sino cuando entra en el array de pokemon entra como 0
+            //y cuando hacemos la consulta a la base de datos es otro id porque en la base de datos es
+            //autoincrementable y para buscar una pokedex por id seria imposible.
             int valorEntero = (int) Math.floor(Math.random() * (9000 - 1000 + 1) + 1000);
             pokedex2.setId(valorEntero);
             user1.getPokedex().add(pokedex2);
@@ -149,9 +164,25 @@ public class Stukemon_Go {
             obtenerRegalos(stukemonDAO, user2, pokepa1);
 
             //Combate entre dos pokemon de dos usuarios
+            System.out.println("************************************************************");
+            //Le creo el id random porque sino cuando entra en el array de pokemon entra como 0
+            //y cuando hacemos la consulta a la base de datos es otro porque en la base de datos es
+            //autoincrementable y para buscar una pokedex por id seria imposible.            
+            //Inserto una pokedex al usuario3 para probar el combate
+            valorEntero = (int) Math.floor(Math.random() * (9000 - 1000 + 1) + 1000);
+            pokedex4.setId(valorEntero);
+            user3.getPokedex().add(pokedex4);
+            stukemonDAO.insertarPokedex(pokedex4, user3);
+            //Inserto una pokedex al usuario4 para probar el combate
+            valorEntero = (int) Math.floor(Math.random() * (9000 - 1000 + 1) + 1000);
+            pokedex5.setId(valorEntero);
+            user4.getPokedex().add(pokedex5);
+            stukemonDAO.insertarPokedex(pokedex5, user4);
+            System.out.println("-- Testeando obtener combate entre dos usuarios con dos pokemon determinados --");
+            combate(stukemonDAO, user3, user3.getPokedex().get(0), user4, user4.getPokedex().get(0));
+
             //Curar a un pokemon de un usuario determinado
             System.out.println("************************************************************");
-
             //Le creo el id random porque sino cuando entra en el array de pokemon entra como 0
             //y cuando hacemos la consulta a la base de datos es otro porque en la base de datos es
             //autoincrementable y para buscar una pokedex por id seria imposible.
@@ -325,6 +356,14 @@ public class Stukemon_Go {
             Usuario aux = stukemonDAO.getUsuarioByNombre(user.getNombreuser());
             System.out.println("·Nuevos datos:");
             System.out.println(aux);
+        } catch (Excepcion ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public static void combate(StukemonDAO stukemonDAO, Usuario user1, Pokedex pokedex1, Usuario user2, Pokedex pokedex2) throws SQLException {
+        try {
+            stukemonDAO.lucha(user1, pokedex1, user2, pokedex2);
         } catch (Excepcion ex) {
             System.out.println(ex.getMessage());
         }

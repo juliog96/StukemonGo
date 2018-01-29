@@ -87,11 +87,253 @@ public class StukemonDAO {
         }
     }
 
-    public void lucha(Usuario usu1, Pokedex pokedex1, Usuario usu2, Pokedex pokedex2) {
-        
-    }
+    //Este metodo se tiene que optimizar pero no me ha dado tiempo, lo siento Mar.
+    public void lucha(Usuario usu1, Pokedex pokedex1, Usuario usu2, Pokedex pokedex2) throws SQLException, Excepcion {
+        if (!existeUsuario(usu1)) {
+            throw new Excepcion("ERROR: No existe ningún usuario con ese nombre");
+        }
+        if (!existePokedexByUser(pokedex1, usu1)) {
+            throw new Excepcion("ERROR: El usuario no tiene el pokemon en su pokedex");
+        }
+        if (!existeUsuario(usu2)) {
+            throw new Excepcion("ERROR: No existe ningún usuario con ese nombre");
+        }
+        if (!existePokedexByUser(pokedex2, usu2)) {
+            throw new Excepcion("ERROR: El usuario no tiene el pokemon en su pokedex");
+        }
+        if (!usu1.getLugar().equals(usu2.getLugar())) {
+            throw new Excepcion("ERROR: Los usuarios no estan en el mismo lugar");
+        }
+        int stucoins = (int) (Math.floor(Math.random() * (50 - 20 + 1) + 20));
+        int points = (int) (Math.floor(Math.random() * (8 - 4 + 1) + 4));
+        int puntos = 0;
 
+        //****************OPCION 1***************************
+        if (pokedex1.getVidaActual() > pokedex2.getVidaActual()) {
+            while (pokedex1.getVidaActual() > 0 && pokedex2.getVidaActual() > 0) {
+                int fuerzaAtaque = ((pokedex1.getPc() / 2) + ((int) (Math.floor(Math.random() * (4 - 1 + 1) + 1))));
+                pokedex2.setVidaActual(pokedex2.getVidaActual() - fuerzaAtaque);
+                if (pokedex2.getVidaActual() > 0) {
+                    fuerzaAtaque = ((pokedex2.getPc() / 2) + ((int) (Math.floor(Math.random() * (4 - 1 + 1) + 1))));
+                    pokedex1.setVidaActual(pokedex1.getVidaActual() - fuerzaAtaque);
+                } else {
+                    insertarLucha(pokedex1, pokedex2, pokedex1);
+                    pokedex2.setVidaActual(0);
+
+                    String actulizarVida = "update pokedex set lifecurrent=? where idpokedex=?";
+                    PreparedStatement ac = conexion.prepareStatement(actulizarVida);
+                    ac.setInt(1, pokedex1.getVidaActual());
+                    ac.setInt(2, pokedex1.getId());
+                    ac.executeUpdate();
+                    ac.close();
+
+                    String actulizarVida2 = "update pokedex set lifecurrent=0 where idpokedex=?";
+                    PreparedStatement ac2 = conexion.prepareStatement(actulizarVida2);
+                    ac2.setInt(1, pokedex2.getId());
+                    ac2.executeUpdate();
+                    ac2.close();
+
+                    String update = "update user set pokecoins=(pokecoins+?) where username=?";
+                    PreparedStatement ps = conexion.prepareStatement(update);
+                    ps.setInt(1, stucoins);
+                    ps.setString(2, usu1.getNombreuser());
+                    ps.executeUpdate();
+                    ps.close();
+
+                    String select = "select points from user where username='" + usu1.getNombreuser() + "'";
+                    Statement st = conexion.createStatement();
+                    ResultSet rs = st.executeQuery(select);
+                    if (rs.next()) {
+                        puntos = (rs.getInt("points"));
+                    }
+                    rs.close();
+                    st.close();
+
+                    int puntosTotal = puntos + points;
+
+                    if (puntosTotal > 15) {
+                        String update3 = "update user set level=(level+1), points=0 where username=?";
+                        PreparedStatement ps3 = conexion.prepareStatement(update3);
+                        ps3.setString(1, usu1.getNombreuser());
+                        ps3.executeUpdate();
+                        ps3.close();
+                    } else {
+                        String update4 = "update user set points=? where username=?";
+                        PreparedStatement ps4 = conexion.prepareStatement(update4);
+                        ps4.setInt(1, puntosTotal);
+                        ps4.setString(2, usu1.getNombreuser());
+                        ps4.executeUpdate();
+                        ps4.close();
+                    }
+                    System.out.println("El ganador es " + usu1.getNombreuser());
+                }
+                if (pokedex1.getVidaActual() <= 0) {
+                    insertarLucha(pokedex1, pokedex2, pokedex2);
+                    pokedex1.setVidaActual(0);
+
+                    String actulizarVida = "update pokedex set lifecurrent=? where idpokedex=?";
+                    PreparedStatement ac = conexion.prepareStatement(actulizarVida);
+                    ac.setInt(1, pokedex2.getVidaActual());
+                    ac.setInt(2, pokedex2.getId());
+                    ac.executeUpdate();
+                    ac.close();
+
+                    String actulizarVida2 = "update pokedex set lifecurrent=0 where idpokedex=?";
+                    PreparedStatement ac2 = conexion.prepareStatement(actulizarVida2);
+                    ac2.setInt(1, pokedex1.getId());
+                    ac2.executeUpdate();
+                    ac2.close();
+
+                    String update = "update user set pokecoins=(pokecoins+?) where username=?";
+                    PreparedStatement ps = conexion.prepareStatement(update);
+                    ps.setInt(1, stucoins);
+                    ps.setString(2, usu2.getNombreuser());
+                    ps.executeUpdate();
+                    ps.close();
+
+                    String select = "select points from user where username='" + usu2.getNombreuser() + "'";
+                    Statement st = conexion.createStatement();
+                    ResultSet rs = st.executeQuery(select);
+                    if (rs.next()) {
+                        puntos = (rs.getInt("points"));
+                    }
+                    rs.close();
+                    st.close();
+
+                    int puntosTotal = puntos + points;
+
+                    if (puntosTotal > 15) {
+                        String update3 = "update user set level=(level+1), points=0 where username=?";
+                        PreparedStatement ps3 = conexion.prepareStatement(update3);
+                        ps3.setString(1, usu2.getNombreuser());
+                        ps3.executeUpdate();
+                        ps3.close();
+                    } else {
+                        String update4 = "update user set points=? where username=?";
+                        PreparedStatement ps4 = conexion.prepareStatement(update4);
+                        ps4.setInt(1, puntosTotal);
+                        ps4.setString(2, usu2.getNombreuser());
+                        ps4.executeUpdate();
+                        ps4.close();
+                    }
+                    System.out.println("El ganador es " + usu2.getNombreuser());
+                }
+            }
+        } //****************OPCION 2***************************
+        if (pokedex2.getVidaActual() > pokedex1.getVidaActual()) {
+            while (pokedex2.getVidaActual() > 0 && pokedex1.getVidaActual() > 0) {
+                int fuerzaAtaque = ((pokedex2.getPc() / 2) + ((int) (Math.floor(Math.random() * (4 - 1 + 1) + 1))));
+                pokedex1.setVidaActual(pokedex1.getVidaActual() - fuerzaAtaque);
+                if (pokedex1.getVidaActual() > 0) {
+                    fuerzaAtaque = ((pokedex1.getPc() / 2) + ((int) (Math.floor(Math.random() * (4 - 1 + 1) + 1))));
+                    pokedex2.setVidaActual(pokedex2.getVidaActual() - fuerzaAtaque);
+                } else {
+                    insertarLucha(pokedex1, pokedex2, pokedex2);
+                    pokedex1.setVidaActual(0);
+
+                    String actulizarVida = "update pokedex set lifecurrent=? where idpokedex=?";
+                    PreparedStatement ac = conexion.prepareStatement(actulizarVida);
+                    ac.setInt(1, pokedex2.getVidaActual());
+                    ac.setInt(2, pokedex2.getId());
+                    ac.executeUpdate();
+                    ac.close();
+
+                    String actulizarVida2 = "update pokedex set lifecurrent=0 where idpokedex=?";
+                    PreparedStatement ac2 = conexion.prepareStatement(actulizarVida2);
+                    ac2.setInt(1, pokedex1.getId());
+                    ac2.executeUpdate();
+                    ac2.close();
+
+                    String update = "update user set pokecoins=(pokecoins+?) where username=?";
+                    PreparedStatement ps = conexion.prepareStatement(update);
+                    ps.setInt(1, stucoins);
+                    ps.setString(2, usu2.getNombreuser());
+                    ps.executeUpdate();
+                    ps.close();
+
+                    String select = "select points from user where username='" + usu2.getNombreuser() + "'";
+                    Statement st = conexion.createStatement();
+                    ResultSet rs = st.executeQuery(select);
+                    if (rs.next()) {
+                        puntos = (rs.getInt("points"));
+                    }
+                    rs.close();
+                    st.close();
+
+                    int puntosTotal = puntos + points;
+
+                    if (puntosTotal > 15) {
+                        String update3 = "update user set level=(level+1), points=0 where username=?";
+                        PreparedStatement ps3 = conexion.prepareStatement(update3);
+                        ps3.setString(1, usu2.getNombreuser());
+                        ps3.executeUpdate();
+                        ps3.close();
+                    } else {
+                        String update4 = "update user set points=? where username=?";
+                        PreparedStatement ps4 = conexion.prepareStatement(update4);
+                        ps4.setInt(1, puntosTotal);
+                        ps4.setString(2, usu2.getNombreuser());
+                        ps4.executeUpdate();
+                        ps4.close();
+                    }
+                    System.out.println("El ganador es " + usu2.getNombreuser());
+                }
+                if (pokedex2.getVidaActual() <= 0) {
+                    insertarLucha(pokedex1, pokedex2, pokedex1);
+                    pokedex2.setVidaActual(0);
+
+                    String actulizarVida = "update pokedex set lifecurrent=? where idpokedex=?";
+                    PreparedStatement ac = conexion.prepareStatement(actulizarVida);
+                    ac.setInt(1, pokedex1.getVidaActual());
+                    ac.setInt(2, pokedex1.getId());
+                    ac.executeUpdate();
+                    ac.close();
+
+                    String actulizarVida2 = "update pokedex set lifecurrent=0 where idpokedex=?";
+                    PreparedStatement ac2 = conexion.prepareStatement(actulizarVida2);
+                    ac2.setInt(1, pokedex2.getId());
+                    ac2.executeUpdate();
+                    ac2.close();
+
+                    String update = "update user set pokecoins=(pokecoins+?) where username=?";
+                    PreparedStatement ps = conexion.prepareStatement(update);
+                    ps.setInt(1, stucoins);
+                    ps.setString(2, usu1.getNombreuser());
+                    ps.executeUpdate();
+                    ps.close();
+
+                    String select = "select points from user where username='" + usu1.getNombreuser() + "'";
+                    Statement st = conexion.createStatement();
+                    ResultSet rs = st.executeQuery(select);
+                    if (rs.next()) {
+                        puntos = (rs.getInt("points"));
+                    }
+                    rs.close();
+                    st.close();
+
+                    int puntosTotal = puntos + points;
+
+                    if (puntosTotal > 15) {
+                        String update3 = "update user set level=(level+1), points=0 where username=?";
+                        PreparedStatement ps3 = conexion.prepareStatement(update3);
+                        ps3.setString(1, usu1.getNombreuser());
+                        ps3.executeUpdate();
+                        ps3.close();
+                    } else {
+                        String update4 = "update user set points=? where username=?";
+                        PreparedStatement ps4 = conexion.prepareStatement(update4);
+                        ps4.setInt(1, puntosTotal);
+                        ps4.setString(2, usu1.getNombreuser());
+                        ps4.executeUpdate();
+                        ps4.close();
+                    }
+                    System.out.println("El ganador es " + usu1.getNombreuser());
+                }
+            }
+        }
+    }
     // ********************* Selects ****************************
+
     public Usuario getUsuarioByNombre(String nombre) throws SQLException, Excepcion {
         // Creamos usuario para comprobar si existe
         Usuario usu = new Usuario(nombre);
@@ -437,6 +679,18 @@ public class StukemonDAO {
         ps.setInt(5, pokedex.getPc());
         ps.setInt(6, pokedex.getMaximaVida());
         ps.setInt(7, pokedex.getVidaActual());
+        ps.executeUpdate();
+        ps.close();
+    }
+
+    public void insertarLucha(Pokedex pokedex, Pokedex pokedex2, Pokedex winner) throws SQLException, Excepcion {
+
+        String insert = "insert into fight values (?, ?, ?, ?)";
+        PreparedStatement ps = conexion.prepareStatement(insert);
+        ps.setInt(1, 0);
+        ps.setInt(2, pokedex.getId());
+        ps.setInt(3, pokedex2.getId());
+        ps.setInt(4, winner.getId());
         ps.executeUpdate();
         ps.close();
     }
