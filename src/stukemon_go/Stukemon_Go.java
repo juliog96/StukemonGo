@@ -9,6 +9,7 @@ import dao.StukemonDAO;
 import excepciones.Excepcion;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import modelo.Pokedex;
 import modelo.Pokemon;
@@ -26,21 +27,33 @@ public class Stukemon_Go {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws Excepcion {
+    public static void main(String[] args) {
 
         StukemonDAO stukemonDAO = new StukemonDAO();
 
+//*************************** Datos Iniciales ********************************************************** 
         //Se regalan 20 pokeballs que se definen en la clase usuario 
-        Usuario user1 = new Usuario("Lucas", "Ro34", "Mosso");
+        Usuario user1 = new Usuario("Lucas", "Ro34", "Splau");
         Usuario user2 = new Usuario("Julio", "Lol21", "Sagrada Familia");
         Usuario user3 = new Usuario("Luis", "1234", "Anec Blau");
         Usuario user4 = new Usuario("Antonia", "12345", "Anec Blau");
+        Usuario user5 = new Usuario("Maria", "125", "Frangoal");
+        Usuario user6 = new Usuario("Carlos", "1125", "Frangoal");
+        Usuario user7 = new Usuario("David", "Q123", "Sagrada Familia");
+        Usuario user8 = new Usuario("Martin", "456Q", "Stucom");
+        Usuario user9 = new Usuario("Pedro", "4561Q", "Torneo");
+        Usuario user10 = new Usuario("Monica", "1256Q", "Torneo");
+        Usuario user11 = new Usuario("Jaime", "456456Q", "Torneo");
+        Usuario user12 = new Usuario("Victor", "069456Q", "Torneo");
+        Usuario user13 = new Usuario("Sara", "12456", "Torneo");
+        Usuario user14 = new Usuario("Julia", "41257R", "Torneo");
 
         Pokemon pk1 = new Pokemon("Pikachu", "Electrico", 15, 30, "C/Pelai");
-        Pokemon pk2 = new Pokemon("Charizar", "Fuego", 20, 50, "Splau");
+        Pokemon pk2 = new Pokemon("Charizar", "Fuego", 20, 50, "Mercadona");
         Pokemon pk3 = new Pokemon("Bulbasur", "Planta", 20, 100, "Splau");
         Pokemon pk4 = new Pokemon("Ivysaur", "Agua", 20, 50, "Barnasud");
         Pokemon pk5 = new Pokemon("Arbok", "Veneno", 20, 60, "Stucom");
+        Pokemon pk6 = new Pokemon("Charmaider", "Fuego", 30, 60, "Splau");
 
         Pokeparada pokepa1 = new Pokeparada("Losa2", "Sagrada Familia", 2, 4);
         Pokedex pokedex1 = new Pokedex(pk1, LocalDate.now(), pk1.getPc(), 20, pk1.getVida());
@@ -49,6 +62,7 @@ public class Stukemon_Go {
         Pokedex pokedex4 = new Pokedex(pk4, LocalDate.now(), pk4.getPc(), pk4.getVida(), pk4.getVida());
         Pokedex pokedex5 = new Pokedex(pk5, LocalDate.now(), pk5.getPc(), pk5.getVida(), pk5.getVida());
 
+//******************************************************************************************************
         // Conectamos a la base de datos
         try {
             System.out.println("************************************************************");
@@ -56,40 +70,48 @@ public class Stukemon_Go {
             stukemonDAO.conectar();
             System.out.println("·Establecida la conexión.");
 
-            //Registramos usuario
             System.out.println("************************************************************");
-            System.out.println("-- Testeando insert user " + user2.getNombreuser() + " --");
+            System.out.println("-- Añadiendo datos para que funcione la aplicacion --");
             altaUser(stukemonDAO, user2);
-
-            //Registramos usuario
-            System.out.println("************************************************************");
-            System.out.println("-- Testeando insert user " + user2.getNombreuser() + " --");
             altaUser(stukemonDAO, user3);
+            altaUser(stukemonDAO, user4);
+            altaUser(stukemonDAO, user5);
+            altaUser(stukemonDAO, user6);
+            altaUser(stukemonDAO, user7);
+            altaUser(stukemonDAO, user8);
+            altaUser(stukemonDAO, user9);
+            altaUser(stukemonDAO, user10);
+            altaUser(stukemonDAO, user11);
+            altaUser(stukemonDAO, user12);
+            altaUser(stukemonDAO, user13);
+            altaUser(stukemonDAO, user14);
+
+            altaPokemon(stukemonDAO, pk2);
+            altaPokemon(stukemonDAO, pk3);
+            altaPokemon(stukemonDAO, pk4);
+            altaPokemon(stukemonDAO, pk5);
+            altaPokemon(stukemonDAO, pk6);
+
+            System.out.println("************************************************************");
 
             //Registramos usuario
             System.out.println("************************************************************");
-            System.out.println("-- Testeando insert user " + user2.getNombreuser() + " --");
-            altaUser(stukemonDAO, user4);
+            System.out.println("-- Testeando insert user " + user1.getNombreuser() + " --");
+            //Para poder hacer punto de - curar pokemon -
+            user1.setPociones(user1.getPociones() + 2);
+            //Para poder hacer punto de - mejorar vida y pc pokemon -
+            user1.setMonedas(user1.getMonedas()+200);
+            altaUser(stukemonDAO, user1);
 
             //Buscamos usuario por nombreuser
             System.out.println("************************************************************");
-            System.out.println("-- Testeando obtener usuario por el username: Julio --");
-            obtenerUsuario(stukemonDAO, "Julio");
+            System.out.println("-- Testeando obtener usuario por el username: " + user2.getNombreuser() + " --");
+            obtenerUsuario(stukemonDAO, user2.getNombreuser());
 
             //Registramos pokemon
             System.out.println("************************************************************");
             System.out.println("-- Testeando insert pokemon " + pk1.getNombre() + " --");
             altaPokemon(stukemonDAO, pk1);
-
-            //Registramos pokemon
-            System.out.println("************************************************************");
-            System.out.println("-- Testeando insert pokemon " + pk4.getNombre() + " --");
-            altaPokemon(stukemonDAO, pk4);
-
-            //Registramos pokemon
-            System.out.println("************************************************************");
-            System.out.println("-- Testeando insert pokemon " + pk5.getNombre() + " --");
-            altaPokemon(stukemonDAO, pk5);
 
             //Registramos pokeparada
             System.out.println("************************************************************");
@@ -98,21 +120,21 @@ public class Stukemon_Go {
 
             //Validamos login usuario
             System.out.println("************************************************************");
-            System.out.println("-- Testeando login usuario: Pepe --");
-            validarUser(stukemonDAO, "Pepe", "Rot34");
+            System.out.println("-- Testeando login usuario: " + user2.getNombreuser() + " --");
+            validarUser(stukemonDAO, user2.getNombreuser(), user2.getPassword());
 
             //Modificamos lugar usuario
             System.out.println("************************************************************");
-            System.out.println("-- Testeando modificar lugar del usuario: Pepe --");
+            System.out.println("-- Testeando modificar lugar del usuario: " + user2.getNombreuser() + " --");
             System.out.println("·Datos Actuales:");
-            System.out.println(user1);
-            System.out.println("·Estableciendo lugar en Splau");
-            user1.setLugar("Splau");
-            modificarLugarUser(stukemonDAO, user1);
+            System.out.println(user2);
+            System.out.println("·Estableciendo lugar en CorteIngles");
+            user2.setLugar("CorteIngles");
+            modificarLugarUser(stukemonDAO, user2);
 
             //Modificamos lugar pokemon
             System.out.println("************************************************************");
-            System.out.println("-- Testeando modificar lugar del pokemon: Pikachu --");
+            System.out.println("-- Testeando modificar lugar del pokemon: " + pk1.getNombre() + " --");
             System.out.println("·Datos Actuales:");
             System.out.println(pk1);
             System.out.println("·Estableciendo lugar en Gran Via 2");
@@ -121,43 +143,73 @@ public class Stukemon_Go {
 
             //Listado pokemon que estan en el mismo lugar que un usuario dado
             System.out.println("************************************************************");
-            System.out.println("-- Testeando obtener listado pokemon que estan en el mismo lugar que el usuario: Julio --");
+            System.out.println("-- Testeando obtener listado pokemon que estan en el mismo lugar que el usuario:" + user1.getNombreuser() + " --");
             obtenerListaPokemonByUserPlace(stukemonDAO, user1);
+
+            //Listado pokemon que estan en el mismo lugar que un usuario dado - Fallo ningun pokemon en el mismo lugar
+            System.out.println("************************************************************");
+            System.out.println("-- Testeando obtener listado pokemon que estan en el mismo lugar que el usuario:" + user2.getNombreuser() + ", Fallo ningun pokemon en el mismo lugar --");
+            obtenerListaPokemonByUserPlace(stukemonDAO, user2);
 
             //Capturar pokemon recibinedo usuario y pokemon
             System.out.println("************************************************************");
-            System.out.println("-- Testeando capturar pokemon, Usuario: " + user1.getNombreuser() + " / Pokemon: " + pk2.getNombre() + " --");
-            capturarPokemon(stukemonDAO, user1, pk2);
+            System.out.println("-- Testeando capturar pokemon, Usuario: " + user1.getNombreuser() + " / Pokemon: " + pk3.getNombre() + " --");
+            capturarPokemon(stukemonDAO, user1, pk3);
+            //Repetimos el metodo para comprobar que el pokemon ha cambiado de lugar
+            System.out.println("-- Testeando si cambia de lugar tanto si se captura como si escapa el pokemon --");
+            capturarPokemon(stukemonDAO, user1, pk3);
 
-            //Reptimos el metodo para comprobar que el pokemon ha cambiado de lugar
+            //Capturar pokemon recibinedo usuario y pokemon - Fallo no estan en el mismo sitio
+            System.out.println("************************************************************");
+            System.out.println("-- Testeando capturar pokemon - Fallo no estan en el mismo sitio, Usuario: " + user1.getNombreuser() + " / Pokemon: " + pk2.getNombre() + " --");
+            capturarPokemon(stukemonDAO, user1, pk2);
+            //Repetimos el metodo para comprobar que el pokemon ha cambiado de lugar
             System.out.println("-- Testeando si cambia de lugar tanto si se captura como si escapa el pokemon --");
             capturarPokemon(stukemonDAO, user1, pk2);
 
-            //Liberar pokemon recibinedo usuario y pokemon
+            //Liberar pokemon recibiendo usuario y pokemon
             System.out.println("************************************************************");
-            //Le creo el id random porque sino cuando entra en el array de pokemon entra como 0
-            //y cuando hacemos la consulta a la base de datos es otro id porque en la base de datos es
-            //autoincrementable y para buscar una pokedex por id seria imposible.
-            int valorEntero = (int) Math.floor(Math.random() * (9000 - 1000 + 1) + 1000);
-            pokedex2.setId(valorEntero);
-            user1.getPokedex().add(pokedex2);
-            stukemonDAO.insertarPokedex(pokedex2, user1);
-            System.out.println("-- Testeando liberar pokemon: Lucas --");
+            try {
+                stukemonDAO.insertarPokedex(pokedex2, user1);
+                user1.setPokedex((ArrayList<Pokedex>) stukemonDAO.getPokedexByUser(user1));
+            } catch (Excepcion ex) {
+                System.out.println(ex.getMessage());
+            }
+            System.out.println("-- Testeando liberar pokemon del usuario: " + user1.getNombreuser() + " --");
             liberarPokemon(stukemonDAO, user1, user1.getPokedex().get(0));
 
-            //Listado usuarios que estan en el mismo lugar que un usuario dado
+            //Liberar pokemon recibiendo usuario y pokemon
             System.out.println("************************************************************");
-            System.out.println("-- Testeando obtener listado usuarios que estan en el mismo lugar que el usuario: Lucas --");
-            obtenerListaUsersByUserPlace(stukemonDAO, user1);
+            try {
+                stukemonDAO.insertarPokedex(pokedex4, user2);
+                user2.setPokedex((ArrayList<Pokedex>) stukemonDAO.getPokedexByUser(user2));
+            } catch (Excepcion ex) {
+                System.out.println(ex.getMessage());
+            }
+            System.out.println("-- Testeando liberar pokemon: " + user1.getNombreuser() + " - Fallo pokemon no pertenece al usuario --");
+            liberarPokemon(stukemonDAO, user1, user2.getPokedex().get(0));
 
-            //Listado pokeparadas que estan en el mismo lugar que un usuario dado
+            //Listado usuarios que estan en el mismo lugar que un usuario dado.
             System.out.println("************************************************************");
-            System.out.println("-- Testeando obtener listado pokeparadas que estan en el mismo lugar que el usuario: Lucas --");
-            obtenerListaPokeparadaByUserPlace(stukemonDAO, user1);
+            System.out.println("-- Testeando obtener listado usuarios que estan en el mismo lugar que el usuario: " + user5.getNombreuser() + " --");
+            obtenerListaUsersByUserPlace(stukemonDAO, user5);
+
+            //Listado pokeparadas que estan en el mismo lugar que un usuario dado.
+            System.out.println("************************************************************");
+            System.out.println("-- Testeando obtener listado pokeparadas que estan en el mismo lugar que el usuario: " + user7.getNombreuser() + " --");
+            obtenerListaPokeparadaByUserPlace(stukemonDAO, user7);
 
             //Coger regalos pokeparadas recibiendo usuario y pokeparada
             System.out.println("************************************************************");
-            System.out.println("-- Testeando obtener regalos de la pokeparada: Osa12 / usuario: Julio  --");
+            System.out.println("-- Testeando obtener regalos de la pokeparada: " + pokepa1.getNombre() + " / usuario: " + user7.getNombreuser() + " --");
+            System.out.println("·Datos Actuales:");
+            System.out.println(user7);
+            System.out.println("·Recoginedo los regalos de la pokeparada");
+            obtenerRegalos(stukemonDAO, user7, pokepa1);
+
+            //Coger regalos pokeparadas recibiendo usuario y pokeparada - Fallo
+            System.out.println("************************************************************");
+            System.out.println("-- Testeando obtener regalos de la pokeparada: " + pokepa1.getNombre() + " / usuario: " + user2.getNombreuser() + " - Fallo no estan en el mismo lugar --");
             System.out.println("·Datos Actuales:");
             System.out.println(user2);
             System.out.println("·Recoginedo los regalos de la pokeparada");
@@ -165,46 +217,53 @@ public class Stukemon_Go {
 
             //Combate entre dos pokemon de dos usuarios
             System.out.println("************************************************************");
-            //Le creo el id random porque sino cuando entra en el array de pokemon entra como 0
-            //y cuando hacemos la consulta a la base de datos es otro porque en la base de datos es
-            //autoincrementable y para buscar una pokedex por id seria imposible.            
-            //Inserto una pokedex al usuario3 para probar el combate
-            valorEntero = (int) Math.floor(Math.random() * (9000 - 1000 + 1) + 1000);
-            pokedex4.setId(valorEntero);
-            user3.getPokedex().add(pokedex4);
-            stukemonDAO.insertarPokedex(pokedex4, user3);
-            //Inserto una pokedex al usuario4 para probar el combate
-            valorEntero = (int) Math.floor(Math.random() * (9000 - 1000 + 1) + 1000);
-            pokedex5.setId(valorEntero);
-            user4.getPokedex().add(pokedex5);
-            stukemonDAO.insertarPokedex(pokedex5, user4);
+            try {
+                stukemonDAO.insertarPokedex(pokedex4, user3);
+                user3.setPokedex((ArrayList<Pokedex>) stukemonDAO.getPokedexByUser(user3));
+                stukemonDAO.insertarPokedex(pokedex5, user4);
+                user4.setPokedex((ArrayList<Pokedex>) stukemonDAO.getPokedexByUser(user4));
+            } catch (Excepcion ex) {
+                System.out.println(ex.getMessage());
+            }
             System.out.println("-- Testeando obtener combate entre dos usuarios con dos pokemon determinados --");
             combate(stukemonDAO, user3, user3.getPokedex().get(0), user4, user4.getPokedex().get(0));
 
             //Curar a un pokemon de un usuario determinado
             System.out.println("************************************************************");
-            //Le creo el id random porque sino cuando entra en el array de pokemon entra como 0
-            //y cuando hacemos la consulta a la base de datos es otro porque en la base de datos es
-            //autoincrementable y para buscar una pokedex por id seria imposible.
-            valorEntero = (int) Math.floor(Math.random() * (9000 - 1000 + 1) + 1000);
-            pokedex3.setId(valorEntero);
-            user1.getPokedex().add(pokedex3);
-            stukemonDAO.insertarPokedex(pokedex3, user1);
-            System.out.println("-- Testeando curar pokemon del Usuario: Lucas / Pokemon: Charizar --");
-            curarPokemonUser(stukemonDAO, user1, user1.getPokedex().get(1));
+            try {
+                stukemonDAO.insertarPokedex(pokedex3, user1);
+                user1.setPokedex((ArrayList<Pokedex>) stukemonDAO.getPokedexByUser(user1));
+            } catch (Excepcion ex) {
+                System.out.println(ex.getMessage());
+            }
+            System.out.println("-- Testeando curar pokemon del Usuario: " + user1.getNombreuser() + "/ Pokemon: " + user1.getPokedex().get(0).getPokemon().getNombre() + " --");
+            curarPokemonUser(stukemonDAO, user1, user1.getPokedex().get(0));
+
+            //Curar a un pokemon de un usuario
+            System.out.println("************************************************************");
+            try {
+                stukemonDAO.insertarPokedex(pokedex3, user6);
+                user6.setPokedex((ArrayList<Pokedex>) stukemonDAO.getPokedexByUser(user6));
+            } catch (Excepcion ex) {
+                System.out.println(ex.getMessage());
+            }
+            System.out.println("-- Testeando curar pokemon, Fallo no tiene pociones - Usuario: " + user6.getNombreuser() + "/ Pokemon: " + user6.getPokedex().get(0).getPokemon().getNombre() + " --");
+            curarPokemonUser(stukemonDAO, user6, user6.getPokedex().get(0));
 
             //Mejorar vida y pc de un pokemon de un usuario determinado
             System.out.println("************************************************************");
-            valorEntero = (int) Math.floor(Math.random() * (9000 - 1000 + 1) + 1000);
-            pokedex1.setId(valorEntero);
-            user1.getPokedex().add(pokedex1);
-            stukemonDAO.insertarPokedex(pokedex1, user1);
-            System.out.println("-- Testeando mejorar vida y pc del Usuario: Lucas / Pokemon: Charizar --");
-            mejorarVidaPc(stukemonDAO, user1, user1.getPokedex().get(2));
+            try {
+                stukemonDAO.insertarPokedex(pokedex1, user1);
+                user1.setPokedex((ArrayList<Pokedex>) stukemonDAO.getPokedexByUser(user1));
+            } catch (Excepcion ex) {
+                System.out.println(ex.getMessage());
+            }
+            System.out.println("-- Testeando mejorar vida y pc del Usuario: " + user1.getNombreuser() + " / Pokemon: " + user1.getPokedex().get(0).getPokemon().getNombre() + " --");
+            mejorarVidaPc(stukemonDAO, user1, user1.getPokedex().get(0));
 
             //Obtener la pokedex de un usuario
             System.out.println("************************************************************");
-            System.out.println("-- Testeando obtener listado pokedex de el usuario: Lucas --");
+            System.out.println("-- Testeando obtener listado pokedex de el usuario: " + user1.getNombreuser() + " --");
             obtenerListaPokedexByUser(stukemonDAO, user1);
 
             //Obtener ranking de los usuarios que tengan mas pokemon
@@ -212,8 +271,33 @@ public class Stukemon_Go {
             System.out.println("-- Testeando obtener ranking usuarios con mas pokemon --");
             obtenerRankingUser(stukemonDAO);
 
-            //Obtener ranking de los 10 mejores pokemon segun el numero de batallas ganadas
             System.out.println("************************************************************");
+            try {
+                //Obtener ranking de los 10 mejores pokemon segun el numero de batallas ganadas
+                stukemonDAO.insertarPokedex(pokedex1, user9);
+                user9.setPokedex((ArrayList<Pokedex>) stukemonDAO.getPokedexByUser(user9));
+
+                stukemonDAO.insertarPokedex(pokedex2, user10);
+                user10.setPokedex((ArrayList<Pokedex>) stukemonDAO.getPokedexByUser(user10));
+
+                stukemonDAO.insertarPokedex(pokedex3, user11);
+                user11.setPokedex((ArrayList<Pokedex>) stukemonDAO.getPokedexByUser(user11));
+
+                stukemonDAO.insertarPokedex(pokedex4, user12);
+                user12.setPokedex((ArrayList<Pokedex>) stukemonDAO.getPokedexByUser(user12));
+
+                stukemonDAO.insertarPokedex(pokedex5, user13);
+                user13.setPokedex((ArrayList<Pokedex>) stukemonDAO.getPokedexByUser(user13));
+
+                stukemonDAO.insertarPokedex(pokedex2, user14);
+                user14.setPokedex((ArrayList<Pokedex>) stukemonDAO.getPokedexByUser(user14));
+
+            } catch (Excepcion ex) {
+                System.out.println(ex.getMessage());
+            }
+            combate(stukemonDAO, user9, user9.getPokedex().get(0), user10, user10.getPokedex().get(0));
+            combate(stukemonDAO, user11, user11.getPokedex().get(0), user12, user12.getPokedex().get(0));
+            combate(stukemonDAO, user13, user13.getPokedex().get(0), user14, user14.getPokedex().get(0));
             System.out.println("-- Testeando obtener top 10 pokemon con mas batallas ganadas --");
             obtenerRankingPokemon(stukemonDAO);
 
@@ -320,6 +404,7 @@ public class Stukemon_Go {
     private static void liberarPokemon(StukemonDAO stukemonDAO, Usuario user, Pokedex pokedex) throws SQLException {
         try {
             stukemonDAO.liberarPokemonPokedex(user, pokedex);
+            System.out.println("·Pokemon Liberado y añadidas 25 pokecoins");
         } catch (Excepcion ex) {
             System.out.println(ex.getMessage());
         }
@@ -364,6 +449,7 @@ public class Stukemon_Go {
     public static void combate(StukemonDAO stukemonDAO, Usuario user1, Pokedex pokedex1, Usuario user2, Pokedex pokedex2) throws SQLException {
         try {
             stukemonDAO.lucha(user1, pokedex1, user2, pokedex2);
+            System.out.println("Combate Realizado con exito");
         } catch (Excepcion ex) {
             System.out.println(ex.getMessage());
         }
@@ -372,6 +458,7 @@ public class Stukemon_Go {
     public static void curarPokemonUser(StukemonDAO stukemonDAO, Usuario user, Pokedex pokedex) throws SQLException {
         try {
             stukemonDAO.curarPokemonUser(user, pokedex);
+            System.out.println("·Pokemon Curado");
         } catch (Excepcion ex) {
             System.out.println(ex.getMessage());
         }
@@ -380,6 +467,7 @@ public class Stukemon_Go {
     public static void mejorarVidaPc(StukemonDAO stukemonDAO, Usuario user, Pokedex pokedex) throws SQLException {
         try {
             stukemonDAO.mejorarPokedexUser(user, pokedex);
+            System.out.println("·Vida Mejorada");
         } catch (Excepcion ex) {
             System.out.println(ex.getMessage());
         }
@@ -388,16 +476,26 @@ public class Stukemon_Go {
     public static void obtenerListaPokedexByUser(StukemonDAO stukemonDAO, Usuario user) throws SQLException {
         try {
             System.out.println("·Datos de las pokedex:");
-            stukemonDAO.getPokedexByUser(user);
+            List<Pokedex> pokedex = stukemonDAO.getPokedexByUser(user);
+            for (Pokedex pokedexUser : pokedex) {
+                System.out.println("Id: " + pokedexUser.getId() + " - NombrePokemon: " + pokedexUser.getPokemon().getNombre()
+                        + " - FechaCaptura: " + pokedexUser.getFecha() + " - Pc: " + pokedexUser.getPc()
+                        + " - VidaActual: " + pokedexUser.getVidaActual() + " - VidaMaxima: " + pokedexUser.getMaximaVida());
+            }
         } catch (Excepcion ex) {
             System.out.println(ex.getMessage());
         }
     }
 
     public static void obtenerRankingUser(StukemonDAO stukemonDAO) throws SQLException {
-        List<RankingUsuarios> rankingUsuario = stukemonDAO.getRankingUsuarios();
-        for (RankingUsuarios rankUsus : rankingUsuario) {
-            System.out.println(rankUsus);
+        try {
+            List<RankingUsuarios> rankingUsuario = stukemonDAO.getRankingUsuarios();
+
+            for (RankingUsuarios rankUsus : rankingUsuario) {
+                System.out.println(rankUsus);
+            }
+        } catch (Excepcion ex) {
+            System.out.println(ex.getMessage());
         }
     }
 

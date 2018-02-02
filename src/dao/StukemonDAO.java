@@ -42,8 +42,6 @@ public class StukemonDAO {
             throw new Excepcion("ERROR: El usuario no tiene pokeballs");
         }
         if ((usu.getLugar().equals(pokemon.getLugar()))) {
-            //Aqui le cambio el lugar pero cuando vuelva a iniciar el programa volvera a capturarlo 
-            //porque cuando el pokemon se vuelve a crear remplaza a este lugar.
             pokemon.setLugar("Diagonal Mar");
             modificarLugarPokemon(pokemon);
             modificarPokeballsCaptura(usu);
@@ -81,7 +79,6 @@ public class StukemonDAO {
             ps.setString(3, usu.getNombreuser());
             ps.executeUpdate();
             ps.close();
-            System.out.println("·Pokeballs y Potions modificadas");
         } else {
             throw new Excepcion("ERROR: Usuario y Pokeparada no estan en el mismo lugar ");
         }
@@ -165,7 +162,6 @@ public class StukemonDAO {
                         ps4.executeUpdate();
                         ps4.close();
                     }
-                    System.out.println("El ganador es " + usu1.getNombreuser());
                 }
                 if (pokedex1.getVidaActual() <= 0) {
                     insertarLucha(pokedex1, pokedex2, pokedex2);
@@ -216,7 +212,6 @@ public class StukemonDAO {
                         ps4.executeUpdate();
                         ps4.close();
                     }
-                    System.out.println("El ganador es " + usu2.getNombreuser());
                 }
             }
         } //****************OPCION 2***************************
@@ -276,7 +271,6 @@ public class StukemonDAO {
                         ps4.executeUpdate();
                         ps4.close();
                     }
-                    System.out.println("El ganador es " + usu2.getNombreuser());
                 }
                 if (pokedex2.getVidaActual() <= 0) {
                     insertarLucha(pokedex1, pokedex2, pokedex1);
@@ -327,7 +321,6 @@ public class StukemonDAO {
                         ps4.executeUpdate();
                         ps4.close();
                     }
-                    System.out.println("El ganador es " + usu1.getNombreuser());
                 }
             }
         }
@@ -401,8 +394,6 @@ public class StukemonDAO {
                 passdes = Utilidades.Contraseña.Desencriptar(passcif);
                 if (pass.equalsIgnoreCase(passdes)) {
                     contraseña = true;
-                    System.out.println("·Contraseña: " + pass);
-                    System.out.println("·Contraseña Base Datos: " + passdes);
                 }
             } catch (Exception ex) {
                 throw new Excepcion("ERROR: Contraseña no coinciden");
@@ -417,29 +408,20 @@ public class StukemonDAO {
         if (!existeUsuario(usu)) {
             throw new Excepcion("ERROR: No existe ningún usuario con ese nombre");
         }
-        String select = "select pokemon.name, pokemon.type, pokemon.pc, pokemon.life, pokemon.place, "
-                + "user.username, user.place  from pokemon inner join user on pokemon.place = user.place "
-                + "where pokemon.place = (select place from user where username = '" + usu.getNombreuser() + "')";
+        String select = "select * from pokemon where place = '" + usu.getLugar() + "'";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(select);
-        String nombreUser = "";
-        String lugarUser = "";
         if (rs.first()) {//recorre el resultset al siguiente registro si es que existen
             rs.beforeFirst();//regresa el puntero al primer registro
             while (rs.next()) {
                 Pokemon poke = new Pokemon();
-                poke.setNombre(rs.getString("pokemon.name"));
-                poke.setTipo(rs.getString("pokemon.type"));
-                poke.setPc(rs.getInt("pokemon.pc"));
-                poke.setVida(rs.getInt("pokemon.life"));
-                poke.setLugar(rs.getString("pokemon.place"));
+                poke.setNombre(rs.getString("name"));
+                poke.setTipo(rs.getString("type"));
+                poke.setPc(rs.getInt("pc"));
+                poke.setVida(rs.getInt("life"));
+                poke.setLugar(rs.getString("place"));
                 pokemon.add(poke);
-                nombreUser = (rs.getString("user.username"));
-                lugarUser = (rs.getString("user.place"));
             }
-            System.out.println("·Datos del Usuario:");
-            System.out.println("·Nombre: " + nombreUser);
-            System.out.println("·Lugar: " + lugarUser);
         } else {
             throw new Excepcion("ERROR: No hay ningun pokemon en el lugar del usuario");
         }
@@ -457,17 +439,12 @@ public class StukemonDAO {
         String select = "select * from user where place='" + usu.getLugar() + "'";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(select);
-        String nombreUser = "";
-        String lugarUser = "";
         if (rs.first()) {//recorre el resultset al siguiente registro si es que existen
             rs.beforeFirst();//regresa el puntero al primer registro
             while (rs.next()) {
                 Usuario user = new Usuario();
                 //Para que no aparezaca el propio usuario en la lista.
-                if (rs.getString("username").equals(usu.getNombreuser())) {
-                    nombreUser = usu.getNombreuser();
-                    lugarUser = usu.getLugar();
-                } else {
+                if (!rs.getString("username").equals(usu.getNombreuser())) {
                     user.setNombreuser(rs.getString("username"));
                     user.setPassword(rs.getString("password"));
                     user.setPokeballs(rs.getInt("pokeballs"));
@@ -479,9 +456,6 @@ public class StukemonDAO {
                     usuarios.add(user);
                 }
             }
-            System.out.println("·Datos del Usuario:");
-            System.out.println("·Nombre: " + nombreUser);
-            System.out.println("·Lugar: " + lugarUser);
         } else {
             throw new Excepcion("ERROR: No hay ningun pokemon en el lugar del usuario");
         }
@@ -499,8 +473,6 @@ public class StukemonDAO {
         String select = "select * from pokeparada where place='" + usu.getLugar() + "'";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(select);
-        String nombreUser = usu.getNombreuser();
-        String lugarUser = usu.getLugar();
         if (rs.first()) {//recorre el resultset al siguiente registro si es que existen
             rs.beforeFirst();//regresa el puntero al primer registro
             while (rs.next()) {
@@ -512,9 +484,6 @@ public class StukemonDAO {
                 pokeparadas.add(pokeparada);
 
             }
-            System.out.println("·Datos del Usuario:");
-            System.out.println("·Nombre: " + nombreUser);
-            System.out.println("·Lugar: " + lugarUser);
         } else {
             throw new Excepcion("ERROR: No hay ningun pokemon en el lugar del usuario");
         }
@@ -532,7 +501,6 @@ public class StukemonDAO {
         String select = "select * from pokedex where user='" + usu.getNombreuser() + "'";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(select);
-        String nombreUser = usu.getNombreuser();
         if (rs.first()) {//recorre el resultset al siguiente registro si es que existen
             rs.beforeFirst();//regresa el puntero al primer registro
             while (rs.next()) {
@@ -545,12 +513,7 @@ public class StukemonDAO {
                 poke.setMaximaVida(rs.getInt("lifemax"));
                 poke.setVidaActual(rs.getInt("lifecurrent"));
                 pokedex.add(poke);
-                System.out.println("Id: " + poke.getId() + " - NombrePokemon: " + poke.getPokemon().getNombre()
-                        + " - FechaCaptura: " + poke.getFecha() + " - Pc: " + poke.getPc()
-                        + " - VidaActual: " + poke.getVidaActual() + " - VidaMaxima: " + poke.getMaximaVida());
             }
-            System.out.println("·Datos del Usuario:");
-            System.out.println("·Nombre: " + nombreUser);
         } else {
             throw new Excepcion("ERROR: No hay ningun pokemon en el lugar del usuario");
         }
@@ -559,7 +522,7 @@ public class StukemonDAO {
         return pokedex;
     }
 
-    public List<RankingUsuarios> getRankingUsuarios() throws SQLException {
+    public List<RankingUsuarios> getRankingUsuarios() throws SQLException, Excepcion {
         List<RankingUsuarios> rankingUsuario = new ArrayList<>();
 
         String select = "select user, count(pokemon) as numPoke from pokedex group by user order by count(pokemon) desc";
@@ -582,15 +545,15 @@ public class StukemonDAO {
     public List<RankingPokemon> getRankingPokemon() throws SQLException {
         List<RankingPokemon> rankingPokemon = new ArrayList<>();
 
-        String select = "select pokedex.pokemon, pokedex.pc, pokedex.lifecurrent, pokedex.user from pokedex inner join fight "
+        String select = "select count(winner) as numVictorias, pokedex.pokemon, pokedex.pc, pokedex.lifecurrent, pokedex.user from pokedex inner join fight "
                 + "on pokedex.idpokedex = fight.winner group by winner order by count(winner) desc limit 10;";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(select);
         int ranking = 1;
         while (rs.next()) {
-            //Acabar consulta
             RankingPokemon rankingPoke = new RankingPokemon();
             rankingPoke.setRanking(ranking);
+            rankingPoke.setNumVictorias(rs.getInt("numVictorias"));
             rankingPoke.setNombre(rs.getString("pokedex.pokemon"));
             rankingPoke.setPc(rs.getInt("pokedex.pc"));
             rankingPoke.setVida(rs.getInt("pokedex.lifecurrent"));
@@ -707,7 +670,6 @@ public class StukemonDAO {
         ps.setString(2, usu.getNombreuser());
         ps.executeUpdate();
         ps.close();
-        System.out.println("·Lugar usuario modificado");
 
     }
 
@@ -722,7 +684,6 @@ public class StukemonDAO {
         ps.setString(2, pk.getNombre());
         ps.executeUpdate();
         ps.close();
-        System.out.println("·Lugar pokemon modificado");
     }
 
     // Función que modifica las pokeballs de un usuario
@@ -732,7 +693,6 @@ public class StukemonDAO {
         ps.setString(1, usu.getNombreuser());
         ps.executeUpdate();
         ps.close();
-        System.out.println("·Pokeballs modificadas");
     }
 
     public void añadirCoinsUser(Usuario usu, Integer numero) throws SQLException, Excepcion {
@@ -744,6 +704,7 @@ public class StukemonDAO {
     }
 
     public void mejorarPokedexUser(Usuario usu, Pokedex pokedex) throws SQLException, Excepcion {
+
         if (!existeUsuario(usu)) {
             throw new Excepcion("ERROR: No existe ningún usuario con ese nombre");
         }
@@ -761,7 +722,12 @@ public class StukemonDAO {
                 ps.setInt(1, pokedex.getId());
                 ps.executeUpdate();
                 ps.close();
-                System.out.println("Vida y Pc mejorada");
+
+                String update2 = "update user set pokecoins=(pokecoins-100) where username=?";
+                PreparedStatement ps2 = conexion.prepareStatement(update2);
+                ps2.setString(1, usu.getNombreuser());
+                ps2.executeUpdate();
+                ps2.close();
             } else {
                 //Lo mejoramos en la base de datos
                 String update = "update pokedex set lifemax=(lifemax+" + 2 + "), pc=(pc+" + 5 + ") "
@@ -770,7 +736,12 @@ public class StukemonDAO {
                 ps.setInt(1, pokedex.getId());
                 ps.executeUpdate();
                 ps.close();
-                System.out.println("·Vida y Pc mejorada");
+
+                String update2 = "update user set pokecoins=(pokecoins-100) where username=?";
+                PreparedStatement ps2 = conexion.prepareStatement(update2);
+                ps2.setString(1, usu.getNombreuser());
+                ps2.executeUpdate();
+                ps2.close();
             }
         }
     }
@@ -788,8 +759,8 @@ public class StukemonDAO {
         if (pokedex.getVidaActual() == pokedex.getMaximaVida()) {
             throw new Excepcion("ERROR: El pokemon no ha sufrido daño");
         } else {
-            int contador = 0;
             int pociones = 1;
+            //Hago este bucle, porque entiendo el usuario puede continuar curando al pokemon si tiene pociones.
             while (pociones > 0 && pokedex.getVidaActual() < pokedex.getMaximaVida()) {
                 pokedex.setVidaActual(pokedex.getVidaActual() + 30);
 
@@ -802,7 +773,6 @@ public class StukemonDAO {
                 ps2.setString(1, usu.getNombreuser());
                 ps2.executeUpdate();
                 ps2.close();
-                contador++;
                 //Y consultamos las pociones que le quedan.
                 String select = "select potions from user where username='" + usu.getNombreuser() + "'";
                 Statement st = conexion.createStatement();
@@ -819,7 +789,6 @@ public class StukemonDAO {
             ps.setInt(2, pokedex.getId());
             ps.executeUpdate();
             ps.close();
-            System.out.println("El usuario ha gastado, " + contador + " pociones");
         }
     }
 
@@ -837,9 +806,7 @@ public class StukemonDAO {
         ps.setInt(1, pokedex.getId());
         ps.executeUpdate();
         ps.close();
-        System.out.println("·Pokemon eliminado de la pokedex del usuario");
         añadirCoinsUser(usu, 25);
-        System.out.println("25 Pokecoins añadidas");
     }
 
     // ********************* Funciones adicionales ****************************

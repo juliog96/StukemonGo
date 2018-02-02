@@ -12,10 +12,14 @@ package modelo;
 public class RankingPokemon {
 
     private int ranking;
+    private int numVictorias;
     private String nombre;
     private int pc;
     private int vida;
     private String nombreUser;
+
+    public RankingPokemon() {
+    }
 
     public int getRanking() {
         return ranking;
@@ -23,6 +27,14 @@ public class RankingPokemon {
 
     public void setRanking(int ranking) {
         this.ranking = ranking;
+    }
+
+    public int getNumVictorias() {
+        return numVictorias;
+    }
+
+    public void setNumVictorias(int numVictorias) {
+        this.numVictorias = numVictorias;
     }
 
     public String getNombre() {
@@ -59,6 +71,7 @@ public class RankingPokemon {
 
     @Override
     public String toString() {
-        return "RankingPokemon{" + "ranking=" + ranking + ", nombre=" + nombre + ", pc=" + pc + ", vida=" + vida + ", nombreUser=" + nombreUser + '}';
+        return "RankingPokemon{" + "ranking=" + ranking + ", numVictorias=" + numVictorias + ", nombre=" + nombre + ", pc=" + pc + ", vida=" + vida + ", nombreUser=" + nombreUser + '}';
     }
+
 }
