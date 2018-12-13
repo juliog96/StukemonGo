@@ -524,7 +524,6 @@ public class StukemonDAO {
 
     public List<RankingUsuarios> getRankingUsuarios() throws SQLException, Excepcion {
         List<RankingUsuarios> rankingUsuario = new ArrayList<>();
-
         String select = "select user, count(pokemon) as numPoke from pokedex group by user order by count(pokemon) desc";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(select);

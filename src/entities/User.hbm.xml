@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13-feb-2018 10:37:00 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entities.User" table="user" catalog="stukemongo" optimistic-lock="version">
+        <id name="username" type="string">
+            <column name="username" length="50" />
+            <generator class="assigned" />
+        </id>
+        <property name="password" type="string">
+            <column name="password" length="20" not-null="true" />
+        </property>
+        <property name="pokeballs" type="int">
+            <column name="pokeballs" not-null="true" />
+        </property>
+        <property name="potions" type="int">
+            <column name="potions" not-null="true" />
+        </property>
+        <property name="level" type="int">
+            <column name="level" not-null="true" />
+        </property>
+        <property name="place" type="string">
+            <column name="place" length="50" not-null="true" />
+        </property>
+        <property name="pokecoins" type="int">
+            <column name="pokecoins" not-null="true" />
+        </property>
+        <property name="points" type="int">
+            <column name="points" not-null="true" />
+        </property>
+        <set name="pokedexes" table="pokedex" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user" length="50" not-null="true" />
+            </key>
+            <one-to-many class="entities.Pokedex" />
+        </set>
+    </class>
+</hibernate-mapping>

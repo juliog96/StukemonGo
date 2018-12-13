@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13-feb-2018 10:37:00 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entities.Pokeparada" table="pokeparada" catalog="stukemongo" optimistic-lock="version">
+        <id name="name" type="string">
+            <column name="name" length="30" />
+            <generator class="assigned" />
+        </id>
+        <property name="place" type="string">
+            <column name="place" length="50" not-null="true" />
+        </property>
+        <property name="pokeballs" type="int">
+            <column name="pokeballs" not-null="true" />
+        </property>
+        <property name="potions" type="int">
+            <column name="potions" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

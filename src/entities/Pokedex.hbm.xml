@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13-feb-2018 10:37:00 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entities.Pokedex" table="pokedex" catalog="stukemongo" optimistic-lock="version">
+        <id name="idpokedex" type="java.lang.Integer">
+            <column name="idpokedex" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="pokemon" class="entities.Pokemon" fetch="select">
+            <column name="pokemon" length="45" not-null="true" />
+        </many-to-one>
+        <many-to-one name="user" class="entities.User" fetch="select">
+            <column name="user" length="50" not-null="true" />
+        </many-to-one>
+        <property name="date" type="date">
+            <column name="date" length="10" not-null="true" />
+        </property>
+        <property name="pc" type="int">
+            <column name="pc" not-null="true" />
+        </property>
+        <property name="lifemax" type="int">
+            <column name="lifemax" not-null="true" />
+        </property>
+        <property name="lifecurrent" type="int">
+            <column name="lifecurrent" not-null="true" />
+        </property>
+        <set name="fightsForWinner" table="fight" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="winner" />
+            </key>
+            <one-to-many class="entities.Fight" />
+        </set>
+        <set name="fightsForPokemon1" table="fight" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="pokemon1" not-null="true" />
+            </key>
+            <one-to-many class="entities.Fight" />
+        </set>
+        <set name="fightsForPokemon2" table="fight" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="pokemon2" not-null="true" />
+            </key>
+            <one-to-many class="entities.Fight" />
+        </set>
+    </class>
+</hibernate-mapping>
